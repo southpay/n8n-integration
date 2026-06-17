@@ -1,0 +1,28 @@
+{
+  "name": "n8n-nodes-southpay",
+  "version": "0.1.0",
+  "description": "n8n community node for SouthPay crypto payments",
+  "license": "UNLICENSED",
+  "keywords": ["n8n-community-node-package", "southpay", "crypto", "payments"],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": ["dist/credentials/SouthPayApi.credentials.js"],
+    "nodes": [
+      "dist/nodes/SouthPay/SouthPay.node.js",
+      "dist/nodes/SouthPay/SouthPayTrigger.node.js"
+    ]
+  },
+  "files": ["dist"],
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "n8n-workflow": "^1.0.0",
+    "typescript": "^5.5.0"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
+}
