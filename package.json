@@ -5,7 +5,7 @@
   "license": "UNLICENSED",
   "keywords": ["n8n-community-node-package", "southpay", "crypto", "payments"],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && node scripts/copy-icons.mjs",
     "typecheck": "tsc --noEmit"
   },
   "n8n": {

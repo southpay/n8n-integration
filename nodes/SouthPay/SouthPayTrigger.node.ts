@@ -25,7 +25,7 @@ export class SouthPayTrigger implements INodeType {
   description: INodeTypeDescription = {
     displayName: "SouthPay Trigger",
     name: "southPayTrigger",
-    icon: "fa:credit-card",
+    icon: { light: "file:southpay.svg", dark: "file:southpay.svg" },
     group: ["trigger"],
     version: 1,
     description: "Starts the workflow on SouthPay payment events",

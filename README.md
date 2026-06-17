@@ -1,8 +1,16 @@
 # n8n-nodes-southpay
 
-n8n community node for SouthPay: a **SouthPay** action node (create / get payment) and a
-**SouthPay Trigger** node that fires on payment-event webhooks (with `Southpay-Signature`
-verification).
+n8n community node for SouthPay: a **SouthPay** action node and a **SouthPay Trigger** node
+that fires on payment-event webhooks (with `Southpay-Signature` verification).
+
+Action operations:
+
+- **Create Payment** (`POST /payments`)
+- **Get Payment** (`GET /payments/{id}`)
+- **Wait For Payment**: polls `GET /payments/{id}` every *Poll Interval* seconds until the
+  payment reaches a terminal status (`completed`, `overpaid`, `failed`, `expired`,
+  `refunded`) or *Timeout* is hit, then returns the final payment. For production, prefer the
+  Trigger node (webhook) over polling.
 
 ## Build
 
