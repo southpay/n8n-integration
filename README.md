@@ -3,14 +3,26 @@
 n8n community node for SouthPay: a **SouthPay** action node and a **SouthPay Trigger** node
 that fires on payment-event webhooks (with `Southpay-Signature` verification).
 
-Action operations:
+Resources and operations:
 
-- **Create Payment** (`POST /payments`)
-- **Get Payment** (`GET /payments/{id}`)
-- **Wait For Payment**: polls `GET /payments/{id}` every *Poll Interval* seconds until the
-  payment reaches a terminal status (`completed`, `overpaid`, `failed`, `expired`,
-  `refunded`) or *Timeout* is hit, then returns the final payment. For production, prefer the
-  Trigger node (webhook) over polling.
+- **Payment**: Create, Get, Wait For Payment, List, Refund, List Refunds
+- **Customer**: Create, Get, List, Update, Delete
+- **Invoice**: Create, Get, List, Finalize, Send, Void
+- **Product**: Create, Get, List, Update
+- **Price**: Create, Get, List
+- **Subscription**: Create, Get, List, Cancel, Pause, Resume
+- **Payout**: Create, Get, List, Quote
+- **Balance**: Get Balances
+
+**Wait For Payment** polls `GET /payments/{id}` every *Poll Interval* seconds until the payment
+reaches a terminal status (`completed`, `overpaid`, `failed`, `expired`, `refunded`) or
+*Timeout* is hit. For production, prefer the Trigger node (webhook) over polling.
+
+### Required API-key scopes
+
+Use a secret key (`sp_sk_...`) whose scopes cover what you call: `payments:*`, `refunds:*`,
+`payouts:*`, `balances:read`, `billing:*`. Money-movement (Payout, Refund) is also gated
+server-side and can return `mfa_required` / `authorization_denied` depending on store config.
 
 ## Build
 
