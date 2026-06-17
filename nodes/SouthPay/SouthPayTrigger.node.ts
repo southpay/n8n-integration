@@ -28,12 +28,28 @@ export class SouthPayTrigger implements INodeType {
     icon: { light: "file:southpay.svg", dark: "file:southpay.svg" },
     group: ["trigger"],
     version: 1,
+    subtitle: '={{ ($parameter["events"] || []).length ? $parameter["events"].join(", ") : "all events" }}',
     description: "Starts the workflow on SouthPay payment events",
     defaults: { name: "SouthPay Trigger" },
     inputs: [],
     outputs: [NodeConnectionTypes.Main],
     webhooks: [{ name: "default", httpMethod: "POST", responseMode: "onReceived", path: "southpay" }],
     properties: [
+      {
+        displayName: "Events",
+        name: "events",
+        type: "multiOptions",
+        default: [],
+        description: "Only trigger for these event types. Leave empty to trigger for all.",
+        options: [
+          { name: "Payment Created", value: "payment_intent.created" },
+          { name: "Payment Processing", value: "payment_intent.processing" },
+          { name: "Payment Completed", value: "payment_intent.completed" },
+          { name: "Payment Failed", value: "payment_intent.failed" },
+          { name: "Payment Expired", value: "payment_intent.expired" },
+          { name: "Payment Refunded", value: "payment_intent.refunded" },
+        ],
+      },
       {
         displayName: "Signing Secret",
         name: "signingSecret",
@@ -60,6 +76,11 @@ export class SouthPayTrigger implements INodeType {
         res.status(401).send("invalid signature");
         return { noWebhookResponse: true };
       }
+    }
+
+    const events = (this.getNodeParameter("events", []) as string[]) || [];
+    if (events.length && !events.includes(String(body.type))) {
+      return { webhookResponse: "ignored" };
     }
 
     return { workflowData: [this.helpers.returnJsonArray([body])] };
