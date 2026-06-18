@@ -2,7 +2,7 @@
   "name": "n8n-nodes-southpay",
   "version": "0.1.0",
   "description": "n8n community node for SouthPay crypto payments",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "keywords": ["n8n-community-node-package", "southpay", "crypto", "payments"],
   "repository": {
     "type": "git",
