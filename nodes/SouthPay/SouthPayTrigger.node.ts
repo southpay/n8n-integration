@@ -83,7 +83,13 @@ export class SouthPayTrigger implements INodeType {
         const response = (await this.helpers.httpRequestWithAuthentication.call(this, "southPayOAuth2Api", {
           method: "POST",
           url: `${base}/webhook_endpoints`,
-          body: { webhook_endpoint: { url, subscribed_events: events.length ? events : ALL_PAYMENT_EVENTS } },
+          body: {
+            webhook_endpoint: {
+              url,
+              platform: "n8n",
+              subscribed_events: events.length ? events : ALL_PAYMENT_EVENTS,
+            },
+          },
           json: true,
         })) as IDataObject;
 
