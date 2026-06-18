@@ -4,6 +4,10 @@
   "description": "n8n community node for SouthPay crypto payments",
   "license": "UNLICENSED",
   "keywords": ["n8n-community-node-package", "southpay", "crypto", "payments"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/southpay/n8n-integration.git"
+  },
   "scripts": {
     "build": "tsc && node scripts/copy-icons.mjs",
     "typecheck": "tsc --noEmit"
