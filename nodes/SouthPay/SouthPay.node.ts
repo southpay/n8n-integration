@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import {
   NodeConnectionTypes,
   NodeOperationError,
+  sleep,
   type IDataObject,
   type IExecuteFunctions,
   type IHttpRequestMethods,
@@ -197,7 +198,7 @@ export class SouthPay implements INodeType {
             result = await get(path);
             while (!TERMINAL_STATUSES.includes(String(result.status))) {
               if (timeoutS > 0 && (Date.now() - startedAt) / 1000 >= timeoutS) break;
-              await new Promise((resolve) => setTimeout(resolve, pollMs));
+              await sleep(pollMs);
               result = await get(path);
             }
           }
