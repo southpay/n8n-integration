@@ -10,7 +10,7 @@
   },
   "n8n": {
     "n8nNodesApiVersion": 1,
-    "credentials": ["dist/credentials/SouthPayApi.credentials.js"],
+    "credentials": ["dist/credentials/SouthPayOAuth2Api.credentials.js"],
     "nodes": [
       "dist/nodes/SouthPay/SouthPay.node.js",
       "dist/nodes/SouthPay/SouthPayTrigger.node.js"

@@ -17,7 +17,7 @@ import { properties } from "./descriptions";
 const TERMINAL_STATUSES = ["completed", "overpaid", "failed", "expired", "refunded"];
 
 async function baseUrlFor(ctx: IExecuteFunctions | ILoadOptionsFunctions): Promise<string> {
-  const credentials = await ctx.getCredentials("southPayApi");
+  const credentials = await ctx.getCredentials("southPayOAuth2Api");
   return String(credentials.baseUrl).replace(/\/$/, "");
 }
 
@@ -46,7 +46,7 @@ async function search(
   const baseUrl = await baseUrlFor(ctx);
   const qs: IDataObject = { per_page: 25 };
   if (filter) qs.q = filter;
-  const res = await ctx.helpers.httpRequestWithAuthentication.call(ctx, "southPayApi", {
+  const res = await ctx.helpers.httpRequestWithAuthentication.call(ctx, "southPayOAuth2Api", {
     method: "GET",
     url: `${baseUrl}${path}`,
     qs,
@@ -69,7 +69,7 @@ export class SouthPay implements INodeType {
     defaults: { name: "SouthPay" },
     inputs: [NodeConnectionTypes.Main],
     outputs: [NodeConnectionTypes.Main],
-    credentials: [{ name: "southPayApi", required: true }],
+    credentials: [{ name: "southPayOAuth2Api", required: true }],
     properties,
   };
 
@@ -77,7 +77,7 @@ export class SouthPay implements INodeType {
     loadOptions: {
       async getCurrencies(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
         const baseUrl = await baseUrlFor(this);
-        const res = (await this.helpers.httpRequestWithAuthentication.call(this, "southPayApi", {
+        const res = (await this.helpers.httpRequestWithAuthentication.call(this, "southPayOAuth2Api", {
           method: "GET",
           url: `${baseUrl}/payment_currencies`,
           json: true,
@@ -86,7 +86,7 @@ export class SouthPay implements INodeType {
       },
       async getAssets(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
         const baseUrl = await baseUrlFor(this);
-        const res = await this.helpers.httpRequestWithAuthentication.call(this, "southPayApi", {
+        const res = await this.helpers.httpRequestWithAuthentication.call(this, "southPayOAuth2Api", {
           method: "GET",
           url: `${baseUrl}/supported_assets`,
           json: true,
@@ -132,7 +132,7 @@ export class SouthPay implements INodeType {
       body?: IDataObject,
       headers?: IDataObject,
     ) =>
-      this.helpers.httpRequestWithAuthentication.call(this, "southPayApi", {
+      this.helpers.httpRequestWithAuthentication.call(this, "southPayOAuth2Api", {
         method,
         url: `${baseUrl}${path}`,
         body,
@@ -142,7 +142,7 @@ export class SouthPay implements INodeType {
       }) as Promise<IDataObject>;
 
     const get = (path: string, qs?: IDataObject) =>
-      this.helpers.httpRequestWithAuthentication.call(this, "southPayApi", {
+      this.helpers.httpRequestWithAuthentication.call(this, "southPayOAuth2Api", {
         method: "GET",
         url: `${baseUrl}${path}`,
         qs,

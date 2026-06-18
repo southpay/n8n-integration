@@ -18,11 +18,19 @@ Resources and operations:
 reaches a terminal status (`completed`, `overpaid`, `failed`, `expired`, `refunded`) or
 *Timeout* is hit. For production, prefer the Trigger node (webhook) over polling.
 
-### Required API-key scopes
+### Authentication: OAuth2 (Connect account)
 
-Use a secret key (`sp_sk_...`) whose scopes cover what you call: `payments:*`, `refunds:*`,
-`payouts:*`, `balances:read`, `billing:*`. Money-movement (Payout, Refund) is also gated
-server-side and can return `mfa_required` / `authorization_denied` depending on store config.
+The node authenticates via **OAuth2 (Authorization Code + PKCE)** using the **SouthPay OAuth2 API**
+credential. You connect once with "Connect my account" instead of pasting API keys, and the token
+is bound to your store (no store id needed). The requested scopes cover every resource above.
+
+One-time setup: create an OAuth app in SouthPay (`POST /api/v2/merchants/oauth_apps`) to get a
+`client_id` (and `client_secret` for confidential apps), and register your n8n callback URL
+(`https://<your-n8n>/rest/oauth2-credential/callback`) as a redirect URI. Paste the client id/secret
+into the credential and click Connect.
+
+Money-movement (Payout, Refund) stays gated server-side and can return `mfa_required` /
+`authorization_denied` depending on store config, regardless of OAuth scope.
 
 ## Build
 
@@ -55,20 +63,19 @@ npx n8n
 
 Open `http://localhost:5678`, then:
 
-1. Add a **SouthPay** node, create a **SouthPay API** credential. For local testing set Base
-   URL to `http://localhost:3000/api/v2` and paste a secret key (`sp_sk_test_...`). The
-   credential test calls `GET /payments?limit=1`.
+1. Add a **SouthPay** node, create a **SouthPay OAuth2 API** credential. For local testing set
+   the Authorization/Access Token URLs and API Base URL to your `localhost:3000` equivalents,
+   paste your `client_id`/`client_secret`, and click **Connect my account**.
 2. Operation **Create Payment**, set Amount + Currency, execute. You should get back a payment
    with `reference`, `hosted_url`, and `payment_addresses`.
-3. For the **SouthPay Trigger**: add it, copy its test webhook URL, register that URL as a
-   SouthPay webhook endpoint (`POST /api/v2/webhook_endpoints`), paste the returned
-   `whsec_...` into the node's Signing Secret, then complete a payment to see the event arrive.
+3. For the **SouthPay Trigger**: add it, pick the events you want, and **activate the workflow**.
+   The node registers its own webhook endpoint with SouthPay (and stores the signing secret) on
+   activation, and deletes it on deactivation. No manual webhook setup.
 
 After code changes, re-run `npm run build` and restart n8n.
 
 ## Notes
 
-- Use a **secret key** (`sp_sk_...`); publishable keys are write-only and cannot read payments
-  (the credential test would 403).
-- Signature verification uses the raw request body when n8n exposes it; leave the Signing
-  Secret empty to skip verification during early testing.
+- The trigger verifies the `Southpay-Signature` (`t=,v1=` HMAC-SHA256) using the signing secret
+  it captured during auto-registration, via the raw request body when n8n exposes it.
+- Auto-registration needs the `webhooks:write` scope (included in the credential).
