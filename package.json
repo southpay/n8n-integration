@@ -1,12 +1,20 @@
 {
   "name": "n8n-nodes-southpay",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "n8n community node for SouthPay crypto payments",
   "license": "MIT",
+  "author": {
+    "name": "SouthPay",
+    "email": "tech@southpay.io"
+  },
   "keywords": ["n8n-community-node-package", "southpay", "crypto", "payments"],
+  "homepage": "https://github.com/southpay/n8n-integration#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/southpay/n8n-integration.git"
+  },
+  "bugs": {
+    "url": "https://github.com/southpay/n8n-integration/issues"
   },
   "scripts": {
     "build": "tsc && node scripts/copy-icons.mjs",
