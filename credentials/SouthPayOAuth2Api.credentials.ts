@@ -22,6 +22,13 @@ export class SouthPayOAuth2Api implements ICredentialType {
   displayName = "SouthPay OAuth2 API";
   documentationUrl = "https://docs.southpay.io";
   properties: INodeProperties[] = [
+    {
+      displayName: "Client ID",
+      name: "clientId",
+      type: "string",
+      default: "spo_app_n8n",
+      description: "SouthPay's first-party n8n app. Replace it only if you self-host with your own OAuth app.",
+    },
     { displayName: "Grant Type", name: "grantType", type: "hidden", default: "pkce" },
     {
       displayName: "Authorization URL",
